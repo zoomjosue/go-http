@@ -1,3 +1,3 @@
-module GO-HTTP
+module go-http
 
 go 1.22

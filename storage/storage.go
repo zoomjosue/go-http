@@ -5,7 +5,7 @@ import (
 	"os"
 	"sync"
 
-	"GO-HTTP/models"
+	""go-http/models""
 )
 
 const rutaArchivo = "data/dragons.json"
