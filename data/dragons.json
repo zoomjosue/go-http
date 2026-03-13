@@ -6,7 +6,7 @@
     "jinete": "Hipo",
     "color": "Negro",
     "envergadura_m": 14.5,
-    "peso_kg": 180.0,
+    "peso_kg": 180,
     "habilidad": "Explosión de Plasma",
     "es_alfa": true,
     "ubicacion": "Berk"
@@ -17,8 +17,8 @@
     "especie": "Víbora Mortal",
     "jinete": "Astrid",
     "color": "Azul y Amarillo",
-    "envergadura_m": 12.0,
-    "peso_kg": 150.0,
+    "envergadura_m": 12,
+    "peso_kg": 150,
     "habilidad": "Lanzamiento de Espinas",
     "es_alfa": false,
     "ubicacion": "Berk"
@@ -29,8 +29,8 @@
     "especie": "Pesadilla Monstruosa",
     "jinete": "Patán",
     "color": "Rojo y Naranja",
-    "envergadura_m": 16.0,
-    "peso_kg": 200.0,
+    "envergadura_m": 16,
+    "peso_kg": 200,
     "habilidad": "Auto Ignición",
     "es_alfa": false,
     "ubicacion": "Berk"
@@ -41,8 +41,8 @@
     "especie": "Cremallera Horrible",
     "jinete": "Roque y Tara",
     "color": "Verde",
-    "envergadura_m": 18.0,
-    "peso_kg": 250.0,
+    "envergadura_m": 18,
+    "peso_kg": 250,
     "habilidad": "Gas y Chispa",
     "es_alfa": false,
     "ubicacion": "Berk"
@@ -53,8 +53,8 @@
     "especie": "Gronckle",
     "jinete": "Patillas",
     "color": "Café y Gris",
-    "envergadura_m": 8.0,
-    "peso_kg": 400.0,
+    "envergadura_m": 8,
+    "peso_kg": 400,
     "habilidad": "Explosión de Lava",
     "es_alfa": false,
     "ubicacion": "Berk"
@@ -65,8 +65,8 @@
     "especie": "Muerte Roja",
     "jinete": "Ninguno",
     "color": "Rojo",
-    "envergadura_m": 152.0,
-    "peso_kg": 9000.0,
+    "envergadura_m": 152,
+    "peso_kg": 9000,
     "habilidad": "Vórtice de Fuego",
     "es_alfa": true,
     "ubicacion": "Isla Dragón"
@@ -77,8 +77,8 @@
     "especie": "Cortatormenta",
     "jinete": "Valka",
     "color": "Blanco y Gris",
-    "envergadura_m": 20.0,
-    "peso_kg": 220.0,
+    "envergadura_m": 20,
+    "peso_kg": 220,
     "habilidad": "Alas de Cuchilla",
     "es_alfa": false,
     "ubicacion": "Santuario de Dragones"
@@ -89,8 +89,8 @@
     "especie": "Cuernorumbante",
     "jinete": "Estoico",
     "color": "Café",
-    "envergadura_m": 14.0,
-    "peso_kg": 350.0,
+    "envergadura_m": 14,
+    "peso_kg": 350,
     "habilidad": "Instinto de Rastreo",
     "es_alfa": false,
     "ubicacion": "Berk"
@@ -102,7 +102,7 @@
     "jinete": "Bocón",
     "color": "Gris",
     "envergadura_m": 8.5,
-    "peso_kg": 420.0,
+    "peso_kg": 420,
     "habilidad": "Explosión de Lava",
     "es_alfa": false,
     "ubicacion": "Berk"
@@ -113,8 +113,8 @@
     "especie": "Retumbatrón",
     "jinete": "Estoico",
     "color": "Azul y Verde Azulado",
-    "envergadura_m": 15.0,
-    "peso_kg": 280.0,
+    "envergadura_m": 15,
+    "peso_kg": 280,
     "habilidad": "Explosión Sónica",
     "es_alfa": false,
     "ubicacion": "Mar"
@@ -125,8 +125,8 @@
     "especie": "Látigo Navaja",
     "jinete": "Heather",
     "color": "Plateado",
-    "envergadura_m": 13.0,
-    "peso_kg": 160.0,
+    "envergadura_m": 13,
+    "peso_kg": 160,
     "habilidad": "Cola de Navaja",
     "es_alfa": false,
     "ubicacion": "Mar Abierto"
@@ -137,10 +137,22 @@
     "especie": "Tifonomegante",
     "jinete": "Ninguno",
     "color": "Naranja y Rojo",
-    "envergadura_m": 11.0,
-    "peso_kg": 190.0,
+    "envergadura_m": 11,
+    "peso_kg": 190,
     "habilidad": "Anillo de Fuego Giratorio",
     "es_alfa": false,
     "ubicacion": "Naturaleza"
+  },
+  {
+    "id": 13,
+    "nombre": "Sombra de Luna",
+    "especie": "Furia Lunar",
+    "jinete": "Luna",
+    "color": "Blanco Perla",
+    "envergadura_m": 13.5,
+    "peso_kg": 170,
+    "habilidad": "Rayo de Luna",
+    "es_alfa": false,
+    "ubicacion": "Santuario de Dragones"
   }
 ]

@@ -1,86 +1,301 @@
-# Backend con Go — De TCP a APIs RESTful
+#  API REST — Cómo Entrenar a Tu Dragón
 
-Este repositorio es un recorrido progresivo para entender cómo funciona un servidor backend en Go desde la base.
+API RESTful construida en Go utilizando únicamente la librería estándar (`net/http`, `encoding/json`).
+El tema es la película **Cómo Entrenar a Tu Dragón (2010)**, con un catálogo completo de dragones del universo de la película.
 
-El objetivo no es aprender un framework.
-
-El objetivo es entender el problema antes de usar la solución.
 
 ---
 
-## 🧠 Enfoque
-
-Comenzamos desde el nivel más bajo posible:
-
-* TCP puro
-* Construcción manual de HTTP
-* Routing manual
-* Uso de la librería estándar
-* Separación de archivos
-* Servir recursos estáticos
-* Generación de vistas
-* Construcción de APIs JSON
-* Persistencia en archivo
-* Manejo de parámetros
-* Creación de recursos
-
-Cada rama representa una capa adicional de abstracción.
-
-La idea es poder moverse entre ramas y observar cómo evoluciona el servidor.
-
----
-
-## 🎯 Qué se busca lograr
-
-Que el estudiante entienda:
-
-* Qué es realmente HTTP
-* Qué ocurre cuando el navegador hace una petición
-* Qué abstrae `net/http`
-* Cómo funciona el routing
-* Cómo se sirven archivos
-* Cómo se renderizan vistas
-* Cómo se construye una API JSON
-* Cómo se modelan recursos y operaciones
+## Estructura del proyecto
+```
+GO-HTTP/
+├── data/
+│   └── dragons.json     # Base de datos en archivo JSON (persistente)
+├── handlers/
+│   ├── dragones.go      # Lógica de todos los endpoints
+│   └── respuesta.go     # Helpers para respuestas JSON estandarizadas
+├── models/
+│   └── dragon.go        # Struct del modelo Dragon
+├── storage/
+│   └── storage.go       # Lectura y escritura del archivo JSON
+├── .gitignore
+├── Dockerfile
+├── go.mod
+├── main.go
+└── README.md
+```
 
 ---
 
-## 🐳 Entorno
+##  Cómo ejecutar
 
-Todos los ejemplos están preparados para ejecutarse con Docker y Docker Compose.
+### Sin Docker
+```bash
+go mod init GO-HTTP
+go run .
+```
 
-Cada rama contiene sus propias instrucciones para levantar el proyecto.
+### Con Docker
+```bash
+docker build -t httyd-api .
+docker run -p 24918:24918 httyd-api
+```
+
+El servidor corre en el puerto **24918**.
 
 ---
 
-## 📚 Ramas del repositorio
 
-**[01-raw-tcp](https://github.com/menene/go-http/tree/01-raw-tcp)**  
-Servidor construido directamente sobre TCP. Se construye manualmente la respuesta HTTP para entender cómo funciona el protocolo desde la base.
+---
 
-**[02-http-manual-routing](https://github.com/menene/go-http/tree/02-http-manual-routing)**  
-Se parsea manualmente la primera línea del request para extraer método y ruta, implementando routing básico y códigos de estado.
+##  Endpoints
 
-**[03-net-http-basics](https://github.com/menene/go-http/tree/03-net-http-basics)**  
-Se introduce la librería estándar `net/http`, eliminando el manejo manual del protocolo y mostrando el valor de la abstracción.
+### GET `/api/dragones`
+Retorna todos los dragones registrados.
+```
+GET http://localhost:24918/api/dragones
+```
 
-**[04-serve-html-files](https://github.com/menene/go-http/tree/04-serve-html-files)**  
-El servidor comienza a servir archivos HTML reales junto con recursos estáticos como CSS e imágenes.
+**Response `200 OK`:**
+```json
+{
+  "estado": 200,
+  "datos": [ ... ],
+  "total": 12
+}
+```
 
-**[05-templates](https://github.com/menene/go-http/tree/05-templates)**  
-Se introduce `html/template`, permitiendo generar vistas desde el servidor y reutilizar un layout común.
+---
 
-**[06-posts](https://github.com/menene/go-http/tree/06-posts)**  
-Se incorporan formularios HTML y el método POST, permitiendo que el servidor reciba y procese datos enviados por el cliente.
+### GET `/api/dragones?id=1`
+Filtra por ID usando query parameter.
+```
+GET http://localhost:24918/api/dragones?id=1
+```
 
-**[07-json-api](https://github.com/menene/go-http/tree/07-json-api)**  
-Se elimina la capa de vistas y el servidor pasa a ser una API pura que devuelve JSON utilizando `encoding/json`.
+**Response `200 OK`:**
+```json
+{
+  "estado": 200,
+  "datos": {
+    "id": 1,
+    "nombre": "Chimuelo",
+    "especie": "Furia Nocturna",
+    "jinete": "Hipo",
+    "color": "Negro",
+    "envergadura_m": 14.5,
+    "peso_kg": 180,
+    "habilidad": "Explosión de Plasma",
+    "es_alfa": true,
+    "ubicacion": "Berk"
+  },
+  "total": 1
+}
+```
 
-**[08-file-db](https://github.com/menene/go-http/tree/08-file-db)**  
-La API comienza a leer datos desde un archivo JSON, simulando una base de datos basada en archivo.
+---
 
-**[09-query-params](https://github.com/menene/go-http/tree/09-query-params)**  
-Se agregan parámetros en la URL (`?id=`), permitiendo filtrar resultados y modificar el comportamiento del endpoint según el input recibido.
+### GET `/api/dragones?especie=Gronckle&ubicacion=Berk`
+Soporta múltiples filtros combinados.
 
-**[10-post-json](https://github.com/menene/go-http/tree/10-post-json)**  
-Se incorpora soporte para `POST` con body en formato JSON, permitiendo crear nuevos recursos, validar datos y devolver `201 Created`.
+**Query parameters disponibles:**
+
+| Parámetro   | Tipo   | Ejemplo                  |
+|-------------|--------|--------------------------|
+| `id`        | int    | `?id=3`                  |
+| `especie`   | string | `?especie=Gronckle`      |
+| `jinete`    | string | `?jinete=Hipo`           |
+| `es_alfa`   | bool   | `?es_alfa=true`          |
+| `ubicacion` | string | `?ubicacion=Berk`        |
+
+**Ejemplo combinado:**
+```
+GET http://localhost:24918/api/dragones?es_alfa=false&ubicacion=Berk
+```
+
+---
+
+### GET `/api/dragones/{id}`
+Obtiene un dragón por path parameter.
+```
+GET http://localhost:24918/api/dragones/3
+```
+
+**Response `200 OK`:**
+```json
+{
+  "estado": 200,
+  "datos": {
+    "id": 3,
+    "nombre": "Garfio",
+    "especie": "Pesadilla Monstruosa",
+    "jinete": "Patán",
+    "color": "Rojo y Naranja",
+    "envergadura_m": 16,
+    "peso_kg": 200,
+    "habilidad": "Auto Ignición",
+    "es_alfa": false,
+    "ubicacion": "Berk"
+  }
+}
+```
+
+---
+
+### POST `/api/dragones`
+Crea un nuevo dragón. El `id` se genera automáticamente.
+```
+POST http://localhost:24918/api/dragones
+Content-Type: application/json
+```
+
+**Body:**
+```json
+{
+  "nombre": "Sombra de Luna",
+  "especie": "Furia Lunar",
+  "jinete": "Luna",
+  "color": "Blanco Perla",
+  "envergadura_m": 13.5,
+  "peso_kg": 170.0,
+  "habilidad": "Rayo de Luna",
+  "es_alfa": false,
+  "ubicacion": "Santuario de Dragones"
+}
+```
+
+**Response `201 Created`:**
+```json
+{
+  "estado": 201,
+  "mensaje": "Dragón creado exitosamente",
+  "datos": { "id": 13, "nombre": "Sombra de Luna", "..." }
+}
+```
+
+---
+
+### PUT `/api/dragones/{id}`
+Reemplaza completamente un dragón existente. Requiere todos los campos.
+```
+PUT http://localhost:24918/api/dragones/1
+Content-Type: application/json
+```
+
+**Body:**
+```json
+{
+  "nombre": "Chimuelo",
+  "especie": "Furia Nocturna",
+  "jinete": "Hipo Horrendo Abrazo III",
+  "color": "Negro Brillante",
+  "envergadura_m": 14.5,
+  "peso_kg": 185.0,
+  "habilidad": "Explosión de Plasma",
+  "es_alfa": true,
+  "ubicacion": "Berk"
+}
+```
+
+**Response `200 OK`:**
+```json
+{
+  "estado": 200,
+  "mensaje": "Dragón actualizado exitosamente",
+  "datos": { ... }
+}
+```
+
+---
+
+### PATCH `/api/dragones/{id}`
+Actualiza parcialmente un dragón. Solo se envían los campos a modificar.
+```
+PATCH http://localhost:24918/api/dragones/2
+Content-Type: application/json
+```
+
+**Body:**
+```json
+{
+  "ubicacion": "Santuario de Dragones",
+  "es_alfa": true
+}
+```
+
+**Response `200 OK`:**
+```json
+{
+  "estado": 200,
+  "mensaje": "Dragón actualizado parcialmente",
+  "datos": { ... }
+}
+```
+
+---
+
+### DELETE `/api/dragones/{id}`
+Elimina un dragón por su ID.
+```
+DELETE http://localhost:24918/api/dragones/5
+```
+
+**Response `200 OK`:**
+```json
+{
+  "estado": 200,
+  "mensaje": "Dragón con id 5 eliminado exitosamente"
+}
+```
+
+---
+
+## ❌ Manejo de errores
+
+Todos los errores devuelven JSON estructurado:
+```json
+{
+  "estado": 404,
+  "error": "No Encontrado",
+  "mensaje": "No existe un dragón con id 999"
+}
+```
+
+| Código | Situación                                        |
+|--------|--------------------------------------------------|
+| `400`  | JSON inválido o parámetro con tipo incorrecto    |
+| `404`  | Dragón no encontrado                             |
+| `405`  | Método HTTP no permitido en ese endpoint         |
+| `422`  | Campo requerido faltante o valor inválido        |
+| `500`  | Error interno al leer o escribir el archivo      |
+
+---
+
+## 🔒 Validaciones
+
+Los siguientes campos son obligatorios en POST y PUT:
+
+- `nombre`, `especie`, `jinete`, `color`, `habilidad`, `ubicacion` — no pueden estar vacíos
+- `envergadura_m`, `peso_kg` — deben ser mayores a 0
+
+---
+
+## 💾 Persistencia
+
+Todos los cambios (POST, PUT, PATCH, DELETE) se guardan directamente en `data/dragons.json`, garantizando que los datos persisten entre reinicios del servidor.
+
+---
+
+## 🛠️ Tecnologías
+
+- **Lenguaje:** Go 1.22
+- **Librerías:** Solo librería estándar de Go
+- **Persistencia:** Archivo JSON
+- **Contenedor:** Docker (multi-stage build)
+
+---
+
+## 👤 Información
+
+**Carnet:** 24918  
+**Tema:** Cómo Entrenar a Tu Dragón — API REST en Go
